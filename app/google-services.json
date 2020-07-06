@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "466233251996",
+    "firebase_url": "https://tttdb-2b473.firebaseio.com",
+    "project_id": "tttdb-2b473",
+    "storage_bucket": "tttdb-2b473.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466233251996:android:7d8e00dc17e6ca0085f559",
+        "android_client_info": {
+          "package_name": "com.tagalab.tttdb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466233251996-50s3v0c6vqonmr5ucbicf0u18k9u8pv2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY-J7syTn9DreGvvACmJwb9KGC3UbB_Xk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466233251996-50s3v0c6vqonmr5ucbicf0u18k9u8pv2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
