@@ -36,11 +36,7 @@ import com.tagalab.tttdb.db.ExamHistoryInfo;
 import com.tagalab.tttdb.db.WordExtendInfo;
 
 public class MainActivity extends AppCompatActivity {
-// TODO テスト済数／単語数表示
-// TODO 単語のカテゴリ分けを「易しい①」から「易しい１～２０」に変更
-// TODO Git管理
-// TODO アプリ登録
-// TODO アイコン作成
+    // TODO 単語のカテゴリ分けを「易しい①」から「易しい１～２０」に変更
     final private Float SPEECH_SLOW   = 0.5f; // 再生速度(遅い)
     final private Float SPEECH_NORMAL = 1.0f; // 再生速度（標準）
     final private Float SPEECH_FAST   = 1.5f; // 再生速度（速い）
