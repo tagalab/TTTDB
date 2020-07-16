@@ -106,8 +106,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 + WordDictionaryInfo.CON_COL_07 + " TEXT,"
                 + WordDictionaryInfo.CON_COL_08 + " TEXT,"
                 + WordDictionaryInfo.CON_COL_09 + " TEXT,"
-                + WordDictionaryInfo.CON_COL_10 + " TEXT,"
-                + WordDictionaryInfo.CON_COL_11 + " TEXT)"
+                + WordDictionaryInfo.CON_COL_10 + " TEXT)"
         );
         for (String[] strDatas : lstCsvWord) {
             // カラム名と値のセットを生成しテーブルに挿入する。
@@ -119,10 +118,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             objValues.put(WordDictionaryInfo.CON_COL_05, strDatas[4]); // 全品詞
             objValues.put(WordDictionaryInfo.CON_COL_06, strDatas[5]); // 単語
             objValues.put(WordDictionaryInfo.CON_COL_07, strDatas[6].replaceAll(ENTER_BEFORE, ENTER_AFTER));  // 意味 改行変換（<br>⇒\n）
-            objValues.put(WordDictionaryInfo.CON_COL_08, strDatas[7]); // 答え
-            objValues.put(WordDictionaryInfo.CON_COL_09, strDatas[8]); // ヒント
-            objValues.put(WordDictionaryInfo.CON_COL_10, strDatas[9]); // 発音
-            objValues.put(WordDictionaryInfo.CON_COL_11, strDatas[10].replaceAll(ENTER_BEFORE, ENTER_AFTER)); // 用例 改行変換（<br>⇒\n）
+            objValues.put(WordDictionaryInfo.CON_COL_08, strDatas[7]); // ヒント
+            objValues.put(WordDictionaryInfo.CON_COL_09, strDatas[8]); // 発音
+            objValues.put(WordDictionaryInfo.CON_COL_10, strDatas[9].replaceAll(ENTER_BEFORE, ENTER_AFTER)); // 用例 改行変換（<br>⇒\n）
 
             Long lngID = db.insert(WordDictionaryInfo.CON_TBL_NAME, null, objValues);
         }

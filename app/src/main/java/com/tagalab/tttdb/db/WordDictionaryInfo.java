@@ -10,10 +10,9 @@ public class WordDictionaryInfo {
     public static final String CON_COL_05 = "all_type";
     public static final String CON_COL_06 = "word";
     public static final String CON_COL_07 = "mean";
-    public static final String CON_COL_08 = "answer";
-    public static final String CON_COL_09 = "hint";
-    public static final String CON_COL_10 = "phonetic";
-    public static final String CON_COL_11 = "example";
+    public static final String CON_COL_08 = "hint";
+    public static final String CON_COL_09 = "phonetic";
+    public static final String CON_COL_10 = "example";
 
     // 単語コード
     private String word_id = "";
@@ -29,8 +28,6 @@ public class WordDictionaryInfo {
     private String word = "";
     // 意味
     private String mean = "";
-    // 答え
-    private String answer = "";
     // ヒント
     private String hint = "";
     // 発音記号
@@ -62,16 +59,13 @@ public class WordDictionaryInfo {
             mean = _strDatas[6];
         }
         if(_strDatas.length > (int)7 && _strDatas[7] != null) {
-            answer = _strDatas[7];
+            hint = _strDatas[7];
         }
         if(_strDatas.length > (int)8 && _strDatas[8] != null) {
-            hint = _strDatas[8];
+            phonetic = _strDatas[8];
         }
         if(_strDatas.length > (int)9 && _strDatas[9] != null) {
-            phonetic = _strDatas[9];
-        }
-        if(_strDatas.length > (int)10 && _strDatas[10] != null) {
-            example = _strDatas[10];
+            example = _strDatas[9];
         }
     }
 
@@ -101,10 +95,6 @@ public class WordDictionaryInfo {
 
     public String getMean() {
         return mean;
-    }
-
-    public String getAnswer() {
-        return answer;
     }
 
     public String getHint() {

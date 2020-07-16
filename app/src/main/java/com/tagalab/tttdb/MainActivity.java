@@ -36,7 +36,9 @@ import com.tagalab.tttdb.db.ExamHistoryInfo;
 import com.tagalab.tttdb.db.WordExtendInfo;
 
 public class MainActivity extends AppCompatActivity {
-    // TODO 単語のカテゴリ分けを「易しい①」から「易しい１～２０」に変更
+    // TODO 単語のカテゴリ分けを「・・・①」から「・・・１～２０」に変更
+    // TODO 単語の修正
+    // TODO 解答率を保存する
     final private Float SPEECH_SLOW   = 0.5f; // 再生速度(遅い)
     final private Float SPEECH_NORMAL = 1.0f; // 再生速度（標準）
     final private Float SPEECH_FAST   = 1.5f; // 再生速度（速い）
@@ -320,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
                             + ",word_dictionary.all_type "
                             + ",word_dictionary.word "
                             + ",word_dictionary.mean "
-                            + ",word_dictionary.answer "
                             + ",word_dictionary.hint "
                             + ",word_dictionary.phonetic "
                             + ",word_dictionary.example "
@@ -376,17 +377,16 @@ public class MainActivity extends AppCompatActivity {
                                 objCursor.getString(9),
                                 objCursor.getString(10),
                                 objCursor.getString(11),
-                                objCursor.getString(12),
-                                objCursor.getString(13),
+                                objCursor.getString(12)
                         };
                         String[] strWordExt = new String[]{
+                                objCursor.getString(13),
                                 objCursor.getString(14),
                                 objCursor.getString(15),
                                 objCursor.getString(16),
                                 objCursor.getString(17),
                                 objCursor.getString(18),
-                                objCursor.getString(19),
-                                objCursor.getString(20)
+                                objCursor.getString(19)
                         };
 
                         final WordRow objWorkWord = new WordRow(strLv3, strWord, strWordExt);
@@ -481,7 +481,7 @@ public class MainActivity extends AppCompatActivity {
             btnExamSpeech.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String string = WordRow.getWordDictionary().getAnswer();
+                    String string = WordRow.getWordDictionary().getWord();
                     if (0 < string.length()) {
                         if (Tts.isSpeaking()) {
                             // 読み上げ中なら止める
@@ -502,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
         btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (WordRow.getWordDictionary().getAnswer().compareTo(txtInput.getText().toString()) == (int) 0) {
+                if (WordRow.getWordDictionary().getWord().equalsIgnoreCase(txtInput.getText().toString())) {
                     ResultValue = "〇";
                 } else {
                     ResultValue = "×";
@@ -666,7 +666,7 @@ public class MainActivity extends AppCompatActivity {
             btnResultSpeech.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String string = WordRow.getWordDictionary().getAnswer();
+                    String string = WordRow.getWordDictionary().getWord();
                     if (0 < string.length()) {
                         if (Tts.isSpeaking()) {
                             // 読み上げ中なら止める
@@ -712,7 +712,7 @@ public class MainActivity extends AppCompatActivity {
             btnInfoSpeech.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String string = WordRow.getWordDictionary().getAnswer();
+                    String string = WordRow.getWordDictionary().getWord();
                     if (0 < string.length()) {
                         if (Tts.isSpeaking()) {
                             // 読み上げ中なら止める
