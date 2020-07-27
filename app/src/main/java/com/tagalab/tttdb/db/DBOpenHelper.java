@@ -134,7 +134,10 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                         + WordExtendInfo.CON_COL_04 + " TEXT,"
                         + WordExtendInfo.CON_COL_05 + " TEXT,"
                         + WordExtendInfo.CON_COL_06 + " TEXT,"
-                        + WordExtendInfo.CON_COL_07 + " TEXT)"
+                        + WordExtendInfo.CON_COL_07 + " TEXT,"
+                        + WordExtendInfo.CON_COL_08 + " TEXT,"
+                        + WordExtendInfo.CON_COL_09 + " TEXT,"
+                        + WordExtendInfo.CON_COL_10 + " TEXT)"
         );
 
         // テスト結果履歴詳細テーブル生成
