@@ -36,7 +36,6 @@ import com.tagalab.tttdb.db.ExamHistoryInfo;
 import com.tagalab.tttdb.db.WordExtendInfo;
 
 public class MainActivity extends AppCompatActivity {
-    // TODO 単語の修正
     // TODO Google Play説明文・画像の修正
     final private Float SPEECH_SLOW   = 0.5f; // 再生速度(遅い)
     final private Float SPEECH_NORMAL = 1.0f; // 再生速度（標準）
@@ -654,11 +653,17 @@ public class MainActivity extends AppCompatActivity {
         // 単語情報オブジェクトに入力内容を設定
         WordRow.getWordExtend().setWord_id(WordRow.getWordDictionary().getWord_id());
         WordRow.getWordExtend().setResult_0(strNomalHistory);
+        Log.d(LOG_TAG, "解答履歴（ノーマル）:" + strNomalHistory);
         WordRow.getWordExtend().setResult_1(strHintHistory);
+        Log.d(LOG_TAG, "解答履歴（ヒント１）:" + strHintHistory);
         WordRow.getWordExtend().setCount_0("" + intNomalCount);     // 解答数（ノーマル）を設定する
+        Log.d(LOG_TAG, "解答数（ノーマル）:" + intNomalCount);
         WordRow.getWordExtend().setCount_1("" + intHintCount);      // 解答数（ヒント１）を設定する
+        Log.d(LOG_TAG, "解答数（ヒント１）:" + intHintCount);
         WordRow.getWordExtend().setCorrect_0("" + intNomalCorrect); // 正解数（ノーマル）を設定する
+        Log.d(LOG_TAG, "正解数（ノーマル）:"+ intNomalCorrect);
         WordRow.getWordExtend().setCorrect_1("" + intHintCorrect);  // 正解数（ヒント１）を設定する
+        Log.d(LOG_TAG, "正解数（ヒント１）:"+ intHintCorrect);
 
         // 単語情報拡張テーブルの当該単語の行を削除する（行がなくても行う）
         int intID = DB.delete(WordExtendInfo.CON_TBL_NAME, WordExtendInfo.CON_COL_01 + " = ?", new String[]{WordRow.getWordDictionary().getWord_id()});
