@@ -122,7 +122,7 @@ class GroupLv3Button {
 
             TextView objTitle2 = new TextView(new ContextThemeWrapper(mainActivityContext, R.style.WordRowTitleStyle));
             objRow.addView(objTitle2);
-            objTitle2.setText("単語詳細ボタン");
+            objTitle2.setText("単語情報ボタン");
             objTitle2.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
