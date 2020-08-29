@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import androidx.appcompat.view.ContextThemeWrapper;
 
@@ -47,7 +50,7 @@ class GroupLv3Button {
         // XMLのスタイルを適用していても、Javaではlayout_marginやdrawableは反映されないので直接設定する
         Lv3Button.setBackgroundResource(R.drawable.button_next);
         ViewGroup.MarginLayoutParams objMLP = (ViewGroup.MarginLayoutParams) Lv3Button.getLayoutParams();
-        objMLP.setMargins(0, 50,  0, 0);
+        objMLP.setMargins(0, 20,  0, 0);
         Lv3Button.setLayoutParams(objMLP);
         Lv3Button.setText(Lv3Info.getLv3_name());
         Lv3Button.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +104,30 @@ class GroupLv3Button {
 
     void createArea() {
         if (LinearLayout.VISIBLE == AreaOpen) {
-            // 単語列を作成し画面に追加する
+            Lv3Area.setLayoutParams(new TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT,
+                    TableLayout.LayoutParams.MATCH_PARENT));
+
+            // タイトル行を作成し画面に追加する
+            LinearLayout objRow = new LinearLayout(new ContextThemeWrapper(mainActivityContext, R.style.WordRowLayoutStyle));
+            Lv3Area.addView(objRow);
+
+            TextView objTitle1 = new TextView(new ContextThemeWrapper(mainActivityContext, R.style.WordRowTitleStyle));
+            objRow.addView(objTitle1);
+            objTitle1.setText("テストボタン");
+            objTitle1.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            objTitle1.setWidth((int)(100 * MainActivity.THIS_SCALE + 0.5f));
+
+            TextView objTitle2 = new TextView(new ContextThemeWrapper(mainActivityContext, R.style.WordRowTitleStyle));
+            objRow.addView(objTitle2);
+            objTitle2.setText("単語詳細ボタン");
+            objTitle2.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            // 単語行を作成し画面に追加する
             for(final WordRow objWorkWord : WordRows) {
                 objWorkWord.createWordRow(mainActivityContext, Lv3Area);
             }

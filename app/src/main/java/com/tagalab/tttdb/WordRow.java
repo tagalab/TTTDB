@@ -3,19 +3,19 @@ package com.tagalab.tttdb;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.view.ContextThemeWrapper;
 
-import com.tagalab.tttdb.db.GroupLv1Info;
-import com.tagalab.tttdb.db.GroupLv2Info;
-import com.tagalab.tttdb.db.GroupLv3Info;
 import com.tagalab.tttdb.db.WordDictionaryInfo;
 import com.tagalab.tttdb.db.WordExtendInfo;
 
 class WordRow {
+    // todo テーブルレイアウトの行として作成する
+
     // 単語行レイアウト
     private LinearLayout row_layout;
 
@@ -23,124 +23,68 @@ class WordRow {
     private TextView word_text;
     private View.OnClickListener word_text_Listener;
 
-    // 単語ヒントレイアウト
-    private LinearLayout hint_layout;
-    // 単語ヒントボタン
-    private Button hint_button;
-    private View.OnClickListener hint_button_Listener;
-    // 単語ヒントテスト履歴
-    private TextView hint_history_text;
+    // 単語テストボタン
+    private TextView exam_text;
+    private View.OnClickListener exam_text_Listener;
 
-    // 単語ノーマルレイアウト
-    private LinearLayout nomal_layout;
-    // 単語ノーマルボタン
-    private Button nomal_button;
-    private View.OnClickListener nomal_button_Listener;
-    // 単語ノーマルテスト履歴
-    private TextView nomal_history_text;
-
-    // グループLv3情報
-    private GroupLv3Info GroupLv3;
     // 単語情報
     private WordDictionaryInfo WordDictionary;
     // 単語情報拡張
     private WordExtendInfo WordExtend;
 
-    WordRow(String[] _strLv3, String[] _strWord, String[] _strWordExt) {
-        GroupLv3       = new GroupLv3Info(_strLv3);
+    WordRow(String[] _strWord, String[] _strWordExt) {
         WordDictionary = new WordDictionaryInfo(_strWord);
         WordExtend     = new WordExtendInfo(_strWordExt);
 
-        row_layout            = null;
-        word_text             = null;
-        word_text_Listener    = null;
-        hint_layout           = null;
-        hint_button           = null;
-        hint_button_Listener  = null;
-        hint_history_text     = null;
-        nomal_layout          = null;
-        nomal_button          = null;
-        nomal_button_Listener = null;
-        nomal_history_text    = null;
+        row_layout         = null;
+        word_text          = null;
+        word_text_Listener = null;
+        exam_text          = null;
+        exam_text_Listener = null;
     }
 
     void createWordRow(Context _context, LinearLayout _linearLayout) {
+        int intMargin = (int)(1 * MainActivity.THIS_SCALE + 0.5f);
+
         // 単語行レイアウトを生成し画面に追加する
-        row_layout = new LinearLayout(new ContextThemeWrapper(_context, R.style.WordRowLinearLayoutStyle));
+        row_layout = new LinearLayout(new ContextThemeWrapper(_context, R.style.WordRowLayoutStyle));
+        _linearLayout.addView(row_layout);
         row_layout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-        ViewGroup.MarginLayoutParams objMLP = (ViewGroup.MarginLayoutParams) row_layout.getLayoutParams();
-        objMLP.setMargins(0, 10,  0, 0);
-        _linearLayout.addView(row_layout);
+
+        // 単語テスト部を画面に追加する
+        exam_text = new TextView(new ContextThemeWrapper(_context, R.style.WordRowWordStyle));
+        row_layout.addView(exam_text);
+        exam_text.setOnClickListener(exam_text_Listener);
+        exam_text.setBackgroundResource(R.drawable.button_fire);
+        LinearLayout.LayoutParams objParams1 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        objParams1.setMargins(intMargin, intMargin,  intMargin, intMargin);
+        exam_text.setLayoutParams(objParams1);
+        exam_text.setWidth((int)(100 * MainActivity.THIS_SCALE + 0.5f));
+        exam_text.setHeight((int)(60 * MainActivity.THIS_SCALE + 0.5f));
+        String strText;
+        if(WordExtend.getResult().length() <= (int)5) {
+            strText = WordExtend.getPercent() + "%\n" + WordExtend.getResult();
+        } else {
+            strText = WordExtend.getPercent() + "%\n" + WordExtend.getResult().substring(WordExtend.getResult().length() - (int)5);
+        }
+        exam_text.setText(strText);
 
         // 単語名を画面に追加する
-        word_text = new TextView(new ContextThemeWrapper(_context, R.style.WordNameTextViewStyle));
-        word_text.setOnClickListener(word_text_Listener);
-        word_text.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                1));
-        word_text.setText(WordDictionary.getMean());
+        word_text = new TextView(new ContextThemeWrapper(_context, R.style.WordRowWordStyle));
         row_layout.addView(word_text);
-
-        // 単語ヒント部を画面に追加する
-        hint_layout = new LinearLayout(new ContextThemeWrapper(_context, R.style.WordColLinearLayoutStyle));
-        hint_layout.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        objMLP = (ViewGroup.MarginLayoutParams) hint_layout.getLayoutParams();
-        objMLP.setMargins(0, 0,  5, 0);
-        row_layout.addView(hint_layout);
-
-        hint_button = new Button(new ContextThemeWrapper(_context, R.style.WordButtonStyle));
-        hint_button.setOnClickListener(hint_button_Listener);
-        hint_button.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        hint_button.setText("ヒントあり");
-        hint_button.setBackgroundResource(R.drawable.button_next);
-        hint_layout.addView(hint_button);
-
-        hint_history_text = new TextView(new ContextThemeWrapper(_context, R.style.WordHistoryStyle));
-        hint_history_text.setLayoutParams(new LinearLayout.LayoutParams(
+        word_text.setOnClickListener(word_text_Listener);
+        word_text.setBackgroundResource(R.drawable.button_fire);
+        LinearLayout.LayoutParams objParams2 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));
-        if(WordExtend.getResult_1().length() <= (int)5) {
-            hint_history_text.setText(WordExtend.getResult_1());
-        } else {
-            hint_history_text.setText(WordExtend.getResult_1().substring(WordExtend.getResult_1().length() - (int)5));
-        }
-        hint_layout.addView(hint_history_text);
-
-        // 単語ノーマル部を画面に追加する
-        nomal_layout = new LinearLayout(new ContextThemeWrapper(_context, R.style.WordColLinearLayoutStyle));
-        nomal_layout.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        objMLP = (ViewGroup.MarginLayoutParams) nomal_layout.getLayoutParams();
-        objMLP.setMargins(0, 0,  5, 0);
-        row_layout.addView(nomal_layout);
-
-        nomal_button = new Button(new ContextThemeWrapper(_context, R.style.WordButtonStyle));
-        nomal_button.setOnClickListener(nomal_button_Listener);
-        nomal_button.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        nomal_button.setText("ヒントなし");
-        nomal_button.setBackgroundResource(R.drawable.button_next);
-        nomal_layout.addView(nomal_button);
-
-        nomal_history_text = new TextView(new ContextThemeWrapper(_context, R.style.WordHistoryStyle));
-        nomal_history_text.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));
-        if(WordExtend.getResult_0().length() <= (int)5) {
-            nomal_history_text.setText(WordExtend.getResult_0());
-        } else {
-            nomal_history_text.setText(WordExtend.getResult_0().substring(WordExtend.getResult_0().length() - (int)5));
-        }
-        nomal_layout.addView(nomal_history_text);
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        objParams2.setMargins(intMargin, intMargin,  intMargin, intMargin);
+        word_text.setLayoutParams(objParams2);
+        word_text.setHeight((int)(60 * MainActivity.THIS_SCALE + 0.5f));
+        word_text.setText(WordDictionary.getMean());
     }
 
     WordDictionaryInfo getWordDictionary() {
@@ -151,19 +95,11 @@ class WordRow {
         return WordExtend;
     }
 
-    void setRow_layout(LinearLayout row_layout) {
-        this.row_layout = row_layout;
-    }
-
     void setWord_text_Listener(View.OnClickListener word_text_Listener) {
         this.word_text_Listener = word_text_Listener;
     }
 
-    void setHint_button_Listener(View.OnClickListener hint_button_Listener) {
-        this.hint_button_Listener = hint_button_Listener;
-    }
-
-    void setNomal_button_Listener(View.OnClickListener nomal_button_Listener) {
-        this.nomal_button_Listener = nomal_button_Listener;
+    void setExam_text_Listener(View.OnClickListener exam_text_Listener) {
+        this.exam_text_Listener = exam_text_Listener;
     }
 }

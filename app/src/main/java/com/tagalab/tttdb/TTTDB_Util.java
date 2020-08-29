@@ -49,7 +49,7 @@ public class TTTDB_Util {
     public static String getPercent(String _strObtained, String _strTotal) {
         int intObtained = Integer.parseInt(_strObtained);
         int intTotal    = Integer.parseInt(_strTotal);
-        if(0 == intTotal) return "0";
+        if(0 == intTotal) return "－";
 
         return "" + (int)(intObtained * 100 / intTotal);
     }

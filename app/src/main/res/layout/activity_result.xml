@@ -4,17 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
+    android:background="#E3F6CD"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/txtResult"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="〇"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="100dp"
-        android:textStyle="bold" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,35 +14,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="〇"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="100dp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnResultSpeech"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/button_fire"
                 android:text="SPEECH" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="入　力："
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txtResultInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="18sp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -69,6 +49,28 @@
 
                 <TextView
                     android:id="@+id/txtResultAnswer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="入　力："
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtResultInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -102,28 +104,21 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/txtResultMeanTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="意　味："
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtResultMean"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtResultMeanTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="意　味："
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txtResultMean"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lines="3"
-                        android:scrollbars="vertical"
-                        android:singleLine="false" />
-
-                </LinearLayout>
+                    android:lines="3"
+                    android:scrollbars="vertical"
+                    android:singleLine="false" />
 
             </LinearLayout>
 
@@ -133,30 +128,23 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/txtResultMemoTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="メ　モ："
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtResultMemo01"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtResultMemoTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="メ　モ："
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txtResultMemo01"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="top"
-                        android:lines="5"
-                        android:scrollbars="vertical"
-                        android:textSize="14sp"
-                        android:textStyle="normal" />
-
-                </LinearLayout>
+                    android:gravity="top"
+                    android:lines="5"
+                    android:scrollbars="vertical"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
 
             </LinearLayout>
 
@@ -166,6 +154,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/button_fire"
                 android:text="O　K" />
         </LinearLayout>
     </ScrollView>

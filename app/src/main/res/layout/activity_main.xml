@@ -5,6 +5,7 @@
     android:id="@+id/layMainView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E3F6CD"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -21,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:background="#E3F6CD"
         app:adSize="SMART_BANNER"
         app:adUnitId="ca-app-pub-1535072460700438/2475764841" />
     <!-- ca-app-pub-3940256099942544/6300978111 -->

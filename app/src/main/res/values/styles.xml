@@ -38,25 +38,19 @@
         <item name="android:textColor">#FF5722</item>
     </style>
 
-    <style name="WordRowLinearLayoutStyle">
+    <style name="WordRowLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">#E3F6CD</item>
-    </style>
-
-    <style name="WordNameTextViewStyle" parent="android:style/Widget.TextView">
-        <item name="android:textSize">16sp</item>
         <item name="android:gravity">left</item>
     </style>
 
-    <style name="WordColLinearLayoutStyle">
-        <item name="android:orientation">vertical</item>
+    <style name="WordRowTitleStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
     </style>
 
-    <style name="WordButtonStyle">
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="WordHistoryStyle">
+    <style name="WordRowWordStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">left</item>
     </style>

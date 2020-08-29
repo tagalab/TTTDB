@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
+    android:background="#E3F6CD"
     android:orientation="vertical">
 
     <TextView
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingBottom="10dp"
-        android:text="単語タイピングテストＤＢ"
+        android:text="単語 タイピング テスト DB"
         android:textColor="@android:color/holo_orange_dark"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -28,4 +29,5 @@
             android:layout_height="match_parent"
             android:orientation="vertical" />
     </ScrollView>
+
 </LinearLayout>

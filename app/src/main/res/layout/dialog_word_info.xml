@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E3F6CD"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/txtInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="単語情報"
         android:gravity="center"
         android:paddingBottom="5dp"
+        android:text="単語情報"
         android:textColor="@android:color/holo_orange_dark"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -19,6 +20,7 @@
         android:id="@+id/btnInfoSpeech"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_fire"
         android:text="SPEECH" />
 
     <LinearLayout
@@ -71,21 +73,14 @@
             android:text="意　味："
             android:textSize="16sp" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/txtInfoMean"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtInfoMean"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="3"
-                android:scrollbars="vertical"
-                android:singleLine="false" />
-
-        </LinearLayout>
+            android:ellipsize="end"
+            android:lines="3"
+            android:scrollbars="vertical"
+            android:singleLine="false" />
 
     </LinearLayout>
 
@@ -101,36 +96,28 @@
             android:text="メ　モ："
             android:textSize="16sp" />
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/edtInfoMemo01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/edtInfoMemo01"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:ems="10"
-                android:gravity="top"
-                android:hint="メモを保存できます。\n改行して複数行の入力ができます。"
-                android:inputType="textMultiLine|text"
-                android:lines="5"
-                android:scrollbars="vertical"
-                android:textSize="14sp"
-                android:textStyle="normal" />
-
-        </LinearLayout>
+            android:ellipsize="end"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="メモを保存できます。\n改行して複数行の入力ができます。"
+            android:inputType="textMultiLine|text"
+            android:lines="5"
+            android:scrollbars="vertical"
+            android:textSize="14sp"
+            android:textStyle="normal" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/txtInfoTblTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="ヒントあり" />
+        android:gravity="center" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -143,7 +130,7 @@
             android:orientation="vertical">
 
             <TableLayout
-                android:id="@+id/tblHintHistory"
+                android:id="@+id/tblHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -152,82 +139,31 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/txtHintNoTitle"
+                        android:id="@+id/txtNoTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="回数　" />
 
                     <TextView
-                        android:id="@+id/txtHintTimeTitle"
+                        android:id="@+id/txtTimeTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="テスト時間　" />
 
                     <TextView
-                        android:id="@+id/txtHintResultTitle"
+                        android:id="@+id/txtHintTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="結果　" />
 
                     <TextView
-                        android:id="@+id/txtHintInputTitle"
+                        android:id="@+id/txtResultTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="入力した内容" />
-
-                </TableRow>
-
-            </TableLayout>
-        </LinearLayout>
-    </ScrollView>
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="ヒントなし" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TableLayout
-                android:id="@+id/tblNomalHistory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                        android:text="ヒント　" />
 
                     <TextView
-                        android:id="@+id/txtNomalNoTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="回数　" />
-
-                    <TextView
-                        android:id="@+id/txtNomalTimeTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="テスト時間　" />
-
-                    <TextView
-                        android:id="@+id/txtNomalResultTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="結果　" />
-
-                    <TextView
-                        android:id="@+id/txtNomalInputTitle"
+                        android:id="@+id/txtInputTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="入力した内容" />

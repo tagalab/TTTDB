@@ -37,6 +37,10 @@ import com.tagalab.tttdb.db.WordExtendInfo;
 
 public class MainActivity extends AppCompatActivity {
     // TODO Google Play説明文・画像の修正
+    private static final String LOG_TAG        = "MainActivity";
+    private static final String RESULT_SUCCESS = "〇";
+    private static final String RESULT_FAILURE = "×";
+
     final private Float SPEECH_SLOW   = 0.5f; // 再生速度(遅い)
     final private Float SPEECH_NORMAL = 1.0f; // 再生速度（標準）
     final private Float SPEECH_FAST   = 1.5f; // 再生速度（速い）
@@ -44,9 +48,7 @@ public class MainActivity extends AppCompatActivity {
     final private Float PITCH_NORMAL  = 1.0f; // 再生ピッチ（標準）
     final private Float PITCH_HIGH    = 1.5f; // 再生ピッチ（高い）
 
-    private static final String LOG_TAG        = "MainActivity";
-    private static final String RESULT_SUCCESS = "〇";
-    private static final String RESULT_FAILURE = "×";
+    static float THIS_SCALE;
 
     // 広告用オブジェクト
     private AdView AdvMainPromotion;
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         /*####################################
                      ここから実装
         ####################################*/
+        THIS_SCALE = getResources().getDisplayMetrics().density; //画面のdensityを設定。
         LstLv1Buttons = null;
         LstLv3Buttons = null;
         BlnTts        = true;
@@ -326,15 +329,12 @@ public class MainActivity extends AppCompatActivity {
                             + ",word_dictionary.phonetic "
                             + ",word_dictionary.example "
                             + ",word_expansion.word_id "
-                            + ",word_expansion.result_0 "
-                            + ",word_expansion.result_1 "
+                            + ",word_expansion.result "
                             + ",word_expansion.memo_01 "
                             + ",word_expansion.memo_02 "
                             + ",word_expansion.memo_03 "
-                            + ",word_expansion.count_0 "
-                            + ",word_expansion.count_1 "
-                            + ",word_expansion.correct_0 "
-                            + ",word_expansion.correct_1 "
+                            + ",word_expansion.count "
+                            + ",word_expansion.correct "
                             + "FROM word_dictionary "
                             + "INNER JOIN group_lv1 "
                             + "ON word_dictionary.lv1_cd = group_lv1.lv1_cd "
@@ -389,38 +389,27 @@ public class MainActivity extends AppCompatActivity {
                                 objCursor.getString(16),
                                 objCursor.getString(17),
                                 objCursor.getString(18),
-                                objCursor.getString(19),
-                                objCursor.getString(20),
-                                objCursor.getString(21),
-                                objCursor.getString(22)
+                                objCursor.getString(19)
                         };
 
-                        final WordRow objWorkWord = new WordRow(strLv3, strWord, strWordExt);
+                        final WordRow objWorkWord = new WordRow(strWord, strWordExt);
                         objWorkLv3.addChild(objWorkWord);
 
                         // ボタンにクリック時に実行する処理を設定する
+                        // 「テスト」ボタンクリック時に実行する処理を設定する
+                        objWorkWord.setExam_text_Listener(new View.OnClickListener() {
+                            public void onClick(View view) {
+                                HintCD = "0";
+                                WordRow = objWorkWord;
+                                setExamView();
+                            }
+                        });
+
                         // 「単語」テキストクリック時に実行する処理を設定する
                         objWorkWord.setWord_text_Listener(new View.OnClickListener() {
                             public void onClick(View view) {
                                 WordRow = objWorkWord;
                                 showWordInfoDialog();
-                            }
-                        });
-
-                        // 「ヒントあり」ボタンクリック時に実行する処理を設定する
-                        objWorkWord.setHint_button_Listener(new View.OnClickListener() {
-                            public void onClick(View view) {
-                                HintCD = "1";
-                                WordRow = objWorkWord;
-                                setExamView();
-                            }
-                        });
-                        // 「ヒントなし」ボタンクリック時に実行する処理を設定する
-                        objWorkWord.setNomal_button_Listener(new View.OnClickListener() {
-                            public void onClick(View view) {
-                                HintCD = "0";
-                                WordRow = objWorkWord;
-                                setExamView();
                             }
                         });
                     }
@@ -470,15 +459,7 @@ public class MainActivity extends AppCompatActivity {
         // 画面部品を取得
         TextView txtMean = findViewById(R.id.txtExamMean);
         txtMean.setText(WordRow.getWordDictionary().getMean());
-        TextView txtHintTitle = findViewById(R.id.txtExamHintTitle);
-        TextView txtHint = findViewById(R.id.txtExamHint);
-        if(HintCD.equals("0")) {
-            txtHintTitle.setText("");
-            txtHint.setText("");
-        } else {
-            txtHintTitle.setText("ヒント：");
-            txtHint.setText(WordRow.getWordDictionary().getHint());
-        }
+        final TextView txtHint = findViewById(R.id.txtExamHint);
         final TextView txtInput = findViewById(R.id.txtExamInput);
 
         // 読み上げボタンを設定する
@@ -503,8 +484,18 @@ public class MainActivity extends AppCompatActivity {
             btnExamSpeech.setEnabled(false);
         }
 
-        // Goボタン押下時の処理
-        final Button btnGo = findViewById(R.id.btnGo);
+        // ヒントボタン押下時の処理
+        TextView txtHintTitle = findViewById(R.id.txtExamHintTitle);
+        txtHintTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtHint.setText(WordRow.getWordDictionary().getHint());
+                HintCD = "1";
+            }
+        });
+
+        // 決定ボタン押下時の処理
+        Button btnGo = findViewById(R.id.btnGo);
         btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -520,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // BackSpaceボタン押下時の処理
-        final Button btnBS = findViewById(R.id.btnBS);
+        Button btnBS = findViewById(R.id.btnBS);
         btnBS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -589,17 +580,14 @@ public class MainActivity extends AppCompatActivity {
         int    intNomalCount   = 0;
         int    intNomalCorrect = 0;
         String strNomalHistory = "";
-        int    intHintCount    = 0;
-        int    intHintCorrect  = 0;
-        String strHintHistory  = "";
 
         try{
-            // テスト結果履歴（ノーマル）の結果を生成する
+            // テスト結果履歴の結果を生成する
             objCursor = DB.query(
                     false
                     ,ExamHistoryInfo.CON_TBL_NAME
                     ,new String[]{ExamHistoryInfo.CON_COL_03} // 取得する項目名の配列
-                    ,ExamHistoryInfo.CON_COL_02 + " = ? AND " + ExamHistoryInfo.CON_COL_04 + " = 0"
+                    ,ExamHistoryInfo.CON_COL_02 + " = ?"
                     ,new String[]{WordRow.getWordDictionary().getWord_id()} // selectionのパラメータ「?」に置き換わる値の配列
                     ,null
                     ,null
@@ -607,40 +595,15 @@ public class MainActivity extends AppCompatActivity {
                     ,null
             );
             while(objCursor.moveToNext()){
-                // 解答数（ノーマル）を生成する
+                // 解答数を生成する
                 intNomalCount++;
-                // 正解数（ノーマル）を生成する
+                // 正解数を生成する
                 if (objCursor.getString((int)0).equals(RESULT_SUCCESS)) {
                     intNomalCorrect++;
                 }
-                // 解答履歴（ノーマル）を生成する
+                // 解答履歴を生成する
                 if(intNomalCount <= 10) {
                     strNomalHistory = objCursor.getString((int)0) + strNomalHistory;
-                }
-            }
-
-            // テスト結果履歴（ヒント１）の結果を生成する
-            objCursor = DB.query(
-                    false
-                    ,ExamHistoryInfo.CON_TBL_NAME
-                    ,new String[]{ExamHistoryInfo.CON_COL_03} // 取得する項目名の配列
-                    ,ExamHistoryInfo.CON_COL_02 + " = ? AND " + ExamHistoryInfo.CON_COL_04 + " = 1"
-                    ,new String[]{WordRow.getWordDictionary().getWord_id()} // selectionのパラメータ「?」に置き換わる値の配列
-                    ,null
-                    ,null
-                    ,ExamHistoryInfo.CON_COL_06 + " DESC"
-                    ,null
-            );
-            while(objCursor.moveToNext()){
-                // 解答数（ヒント１）を生成する
-                intHintCount++;
-                // 正解数（ヒント１）を生成する
-                if (objCursor.getString((int)0).equals(RESULT_SUCCESS)) {
-                    intHintCorrect++;
-                }
-                // 解答履歴（ヒント１）を生成する
-                if(intHintCount <= 10) {
-                    strHintHistory = objCursor.getString((int)0) + strHintHistory;
                 }
             }
 
@@ -652,18 +615,12 @@ public class MainActivity extends AppCompatActivity {
 
         // 単語情報オブジェクトに入力内容を設定
         WordRow.getWordExtend().setWord_id(WordRow.getWordDictionary().getWord_id());
-        WordRow.getWordExtend().setResult_0(strNomalHistory);
-        Log.d(LOG_TAG, "解答履歴（ノーマル）:" + strNomalHistory);
-        WordRow.getWordExtend().setResult_1(strHintHistory);
-        Log.d(LOG_TAG, "解答履歴（ヒント１）:" + strHintHistory);
-        WordRow.getWordExtend().setCount_0("" + intNomalCount);     // 解答数（ノーマル）を設定する
-        Log.d(LOG_TAG, "解答数（ノーマル）:" + intNomalCount);
-        WordRow.getWordExtend().setCount_1("" + intHintCount);      // 解答数（ヒント１）を設定する
-        Log.d(LOG_TAG, "解答数（ヒント１）:" + intHintCount);
-        WordRow.getWordExtend().setCorrect_0("" + intNomalCorrect); // 正解数（ノーマル）を設定する
-        Log.d(LOG_TAG, "正解数（ノーマル）:"+ intNomalCorrect);
-        WordRow.getWordExtend().setCorrect_1("" + intHintCorrect);  // 正解数（ヒント１）を設定する
-        Log.d(LOG_TAG, "正解数（ヒント１）:"+ intHintCorrect);
+        WordRow.getWordExtend().setResult(strNomalHistory);
+        Log.d(LOG_TAG, "解答履歴:" + strNomalHistory);
+        WordRow.getWordExtend().setCount("" + intNomalCount);     // 解答数を設定する
+        Log.d(LOG_TAG, "解答数:" + intNomalCount);
+        WordRow.getWordExtend().setCorrect("" + intNomalCorrect); // 正解数を設定する
+        Log.d(LOG_TAG, "正解数:"+ intNomalCorrect);
 
         // 単語情報拡張テーブルの当該単語の行を削除する（行がなくても行う）
         int intID = DB.delete(WordExtendInfo.CON_TBL_NAME, WordExtendInfo.CON_COL_01 + " = ?", new String[]{WordRow.getWordDictionary().getWord_id()});
@@ -671,15 +628,12 @@ public class MainActivity extends AppCompatActivity {
         // 答え合わせの直近10回分の結果を、単語情報拡張テーブルに保存する
         objValues = new ContentValues();
         objValues.put(WordExtendInfo.CON_COL_01, WordRow.getWordDictionary().getWord_id()); // 単語コード
-        objValues.put(WordExtendInfo.CON_COL_02, WordRow.getWordExtend().getResult_0());    // テスト結果履歴（ノーマル）
-        objValues.put(WordExtendInfo.CON_COL_03, WordRow.getWordExtend().getResult_1());    // テスト結果履歴（ヒント１）
-        objValues.put(WordExtendInfo.CON_COL_04, WordRow.getWordExtend().getMemo_01());     // メモ１
-        objValues.put(WordExtendInfo.CON_COL_05, WordRow.getWordExtend().getMemo_02());     // メモ２(予約）
-        objValues.put(WordExtendInfo.CON_COL_06, WordRow.getWordExtend().getMemo_03());     // メモ３(予約）
-        objValues.put(WordExtendInfo.CON_COL_07, WordRow.getWordExtend().getCount_0());     // 解答数（ノーマル）
-        objValues.put(WordExtendInfo.CON_COL_08, WordRow.getWordExtend().getCount_1());     // 解答数（ヒント１）
-        objValues.put(WordExtendInfo.CON_COL_09, WordRow.getWordExtend().getCorrect_0());   // 正解数（ノーマル）
-        objValues.put(WordExtendInfo.CON_COL_10, WordRow.getWordExtend().getCorrect_1());   // 正解数（ヒント１）
+        objValues.put(WordExtendInfo.CON_COL_02, WordRow.getWordExtend().getResult());      // テスト結果履歴
+        objValues.put(WordExtendInfo.CON_COL_03, WordRow.getWordExtend().getMemo_01());     // メモ１
+        objValues.put(WordExtendInfo.CON_COL_04, WordRow.getWordExtend().getMemo_02());     // メモ２(予約）
+        objValues.put(WordExtendInfo.CON_COL_05, WordRow.getWordExtend().getMemo_03());     // メモ３(予約）
+        objValues.put(WordExtendInfo.CON_COL_06, WordRow.getWordExtend().getCount());       // 解答数
+        objValues.put(WordExtendInfo.CON_COL_07, WordRow.getWordExtend().getCorrect());     // 正解数
         lngID = DB.insert(WordExtendInfo.CON_TBL_NAME, null, objValues);
 
         // 画面部品を取得
@@ -744,8 +698,8 @@ public class MainActivity extends AppCompatActivity {
         TextView       txtInfoType     = objView.findViewById(R.id.txtInfoType);
         TextView       txtInfoMean     = objView.findViewById(R.id.txtInfoMean);
         final EditText edtInfoMemo01   = objView.findViewById(R.id.edtInfoMemo01);
-        TableLayout    tblHintHistory  = objView.findViewById(R.id.tblHintHistory);
-        TableLayout    tblNomalHistory = objView.findViewById(R.id.tblNomalHistory);
+        TextView       txtInfoTblTitle  = objView.findViewById(R.id.txtInfoTblTitle);
+        TableLayout    tblHistory = objView.findViewById(R.id.tblHistory);
 
         // 読み上げボタンを設定する
         Button   btnInfoSpeech = objView.findViewById(R.id.btnInfoSpeech);
@@ -779,21 +733,18 @@ public class MainActivity extends AppCompatActivity {
                 // 単語情報オブジェクトに入力内容を設定
                 WordRow.getWordExtend().setMemo_01(edtInfoMemo01.getText().toString());
 
-                // テ単語情報拡張テーブルの当該単語の行を削除する（行がなくても行う）
+                // 単語情報拡張テーブルの当該単語の行を削除する（行がなくても行う）
                 int intID = DB.delete(WordExtendInfo.CON_TBL_NAME, WordExtendInfo.CON_COL_01+ " = ?", new String[]{WordRow.getWordDictionary().getWord_id()});
 
                 // 編集内容を単語情報拡張テーブルに保存する
                 ContentValues objValues = new ContentValues();
                 objValues.put(WordExtendInfo.CON_COL_01, WordRow.getWordDictionary().getWord_id()); // 単語コード
-                objValues.put(WordExtendInfo.CON_COL_02, WordRow.getWordExtend().getResult_0());    // テスト結果履歴（ノーマル）
-                objValues.put(WordExtendInfo.CON_COL_03, WordRow.getWordExtend().getResult_1());    // テスト結果履歴（ヒント）
-                objValues.put(WordExtendInfo.CON_COL_04, WordRow.getWordExtend().getMemo_01());     // メモ１行目
-                objValues.put(WordExtendInfo.CON_COL_05, WordRow.getWordExtend().getMemo_02());     // メモ２行目
-                objValues.put(WordExtendInfo.CON_COL_06, WordRow.getWordExtend().getMemo_03());     // メモ３行目
-                objValues.put(WordExtendInfo.CON_COL_07, WordRow.getWordExtend().getCount_0());     // 解答数（ノーマル）
-                objValues.put(WordExtendInfo.CON_COL_08, WordRow.getWordExtend().getCount_1());     // 解答数（ヒント１）
-                objValues.put(WordExtendInfo.CON_COL_09, WordRow.getWordExtend().getCorrect_0());   // 正解数（ノーマル）
-                objValues.put(WordExtendInfo.CON_COL_10, WordRow.getWordExtend().getCorrect_1());   // 正解数（ヒント１）
+                objValues.put(WordExtendInfo.CON_COL_02, WordRow.getWordExtend().getResult());      // テスト結果履歴
+                objValues.put(WordExtendInfo.CON_COL_03, WordRow.getWordExtend().getMemo_01());     // メモ１行目
+                objValues.put(WordExtendInfo.CON_COL_04, WordRow.getWordExtend().getMemo_02());     // メモ２行目
+                objValues.put(WordExtendInfo.CON_COL_05, WordRow.getWordExtend().getMemo_03());     // メモ３行目
+                objValues.put(WordExtendInfo.CON_COL_06, WordRow.getWordExtend().getCount());       // 解答数
+                objValues.put(WordExtendInfo.CON_COL_07, WordRow.getWordExtend().getCorrect());     // 正解数
                 long lngID = DB.insert(WordExtendInfo.CON_TBL_NAME, null, objValues);
             }
         });
@@ -809,6 +760,7 @@ public class MainActivity extends AppCompatActivity {
         txtInfoMean.setText(WordRow.getWordDictionary().getMean());
         txtInfoMean.setMovementMethod(ScrollingMovementMethod.getInstance());
         edtInfoMemo01.setText(WordRow.getWordExtend().getMemo_01());
+        txtInfoTblTitle.setText("テスト結果履歴　(正解率：" + WordRow.getWordExtend().getPercent() + "%)");
 
         // テスト結果履歴を取得し設定する
         Cursor   objCursor = null;
@@ -816,26 +768,26 @@ public class MainActivity extends AppCompatActivity {
         TextView objText   = null;
         String   strIndex  = "";
         try{
-            // テスト結果履歴（ヒント）の結果を生成する
+            // テスト結果履歴の結果を生成する
             objCursor = DB.query(
                     false,
                     ExamHistoryInfo.CON_TBL_NAME,
                     new String[]{
                             "date(" + ExamHistoryInfo.CON_COL_06 + ")",
                             ExamHistoryInfo.CON_COL_03,
+                            ExamHistoryInfo.CON_COL_04,
                             ExamHistoryInfo.CON_COL_05
                     }, // 取得する項目名の配列
-                    ExamHistoryInfo.CON_COL_02 + " = ? AND " + ExamHistoryInfo.CON_COL_04 + " = 1",
+                    ExamHistoryInfo.CON_COL_02 + " = ?",
                     new String[]{WordRow.getWordDictionary().getWord_id()}, // selectionのパラメータ「?」に置き換わる値の配列
                     null,
                     null,
                     ExamHistoryInfo.CON_COL_06,
                     null
             );
-
             while(objCursor.moveToNext()){
                 objRow = new TableRow(this);
-                tblHintHistory.addView(objRow);
+                tblHistory.addView(objRow);
 
                 // 行番号
                 strIndex = "" + ((objCursor.getPosition() + 1));
@@ -853,51 +805,18 @@ public class MainActivity extends AppCompatActivity {
                 objText.setText(objCursor.getString((int)1));
                 objRow.addView(objText);
 
-                // 入力した内容
+                // ヒント有無
                 objText = new TextView(this);
-                objText.setText(objCursor.getString((int)2));
-                objRow.addView(objText);
-            }
-
-            // テスト結果履歴（ノーマル）の結果を生成する
-            objCursor = DB.query(
-                    false,
-                    ExamHistoryInfo.CON_TBL_NAME,
-                    new String[]{
-                            "date(" + ExamHistoryInfo.CON_COL_06 + ")",
-                            ExamHistoryInfo.CON_COL_03,
-                            ExamHistoryInfo.CON_COL_05
-                    }, // 取得する項目名の配列
-                    ExamHistoryInfo.CON_COL_02 + " = ? AND " + ExamHistoryInfo.CON_COL_04 + " = 0",
-                    new String[]{WordRow.getWordDictionary().getWord_id()}, // selectionのパラメータ「?」に置き換わる値の配列
-                    null,
-                    null,
-                    ExamHistoryInfo.CON_COL_06,
-                    null
-            );
-            while(objCursor.moveToNext()){
-                objRow = new TableRow(this);
-                tblNomalHistory.addView(objRow);
-
-                // 行番号
-                strIndex = "" + ((objCursor.getPosition() + 1));
-                objText = new TextView(this);
-                objText.setText(strIndex);
-                objRow.addView(objText);
-
-                // テスト時間
-                objText = new TextView(this);
-                objText.setText(objCursor.getString((int)0));
-                objRow.addView(objText);
-
-                // テスト結果
-                objText = new TextView(this);
-                objText.setText(objCursor.getString((int)1));
+                if (objCursor.getString((int)2).equals("0")) {
+                    objText.setText("");
+                } else {
+                    objText.setText("あり");
+                }
                 objRow.addView(objText);
 
                 // 入力した内容
                 objText = new TextView(this);
-                objText.setText(objCursor.getString((int)2));
+                objText.setText(objCursor.getString((int)3));
                 objRow.addView(objText);
             }
 

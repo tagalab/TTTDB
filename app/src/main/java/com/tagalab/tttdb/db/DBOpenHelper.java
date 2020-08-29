@@ -16,7 +16,7 @@ import com.tagalab.tttdb.TTTDB_Util;
 public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String LOG_TAG = "DBOpenHelper";
     private static final String DB_NAME = "TTTDB.sqlite";
-    private static final int    DB_VER  = 1;
+    private static final int    DB_VER  = 2;
 
     private static final String ENTER_BEFORE = "<br>";
     private static final String ENTER_AFTER  = "\n";
@@ -134,10 +134,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                         + WordExtendInfo.CON_COL_04 + " TEXT,"
                         + WordExtendInfo.CON_COL_05 + " TEXT,"
                         + WordExtendInfo.CON_COL_06 + " TEXT,"
-                        + WordExtendInfo.CON_COL_07 + " TEXT,"
-                        + WordExtendInfo.CON_COL_08 + " TEXT,"
-                        + WordExtendInfo.CON_COL_09 + " TEXT,"
-                        + WordExtendInfo.CON_COL_10 + " TEXT)"
+                        + WordExtendInfo.CON_COL_07 + " TEXT)"
         );
 
         // テスト結果履歴詳細テーブル生成
@@ -195,17 +192,41 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         Log.d(LOG_TAG, "START onUpgrade");
 
         // 旧バージョン以降のDB更新を全て行う必要があるのでbreak句は記載しない。
-//        switch (oldVersion) {
-//            // バージョンＵＰ（１->２）の処理
-//            case (int)1:
-//
+        switch (oldVersion) {
+            // バージョンＵＰ（１->２）の処理
+            case (int)1:
+                Log.d(LOG_TAG, "バージョンＵＰ（１->２）");
+
+                // 単語データテーブル再生成
+                db.execSQL("DROP TABLE " + WordExtendInfo.CON_TBL_NAME);
+                db.execSQL("CREATE TABLE " + WordExtendInfo.CON_TBL_NAME + "("
+                          + WordExtendInfo.CON_COL_01 + " TEXT　PRIMARY KEY,"
+                          + WordExtendInfo.CON_COL_02 + " TEXT,"
+                          + WordExtendInfo.CON_COL_03 + " TEXT,"
+                          + WordExtendInfo.CON_COL_04 + " TEXT,"
+                          + WordExtendInfo.CON_COL_05 + " TEXT,"
+                          + WordExtendInfo.CON_COL_06 + " TEXT,"
+                          + WordExtendInfo.CON_COL_07 + " TEXT)"
+                );
+
+                // テスト結果履歴詳細テーブル再生成
+                db.execSQL("DROP TABLE " + ExamHistoryInfo.CON_TBL_NAME);
+                db.execSQL("CREATE TABLE " + ExamHistoryInfo.CON_TBL_NAME +"("
+                          + ExamHistoryInfo.CON_COL_01 + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                          + ExamHistoryInfo.CON_COL_02 + " TEXT,"
+                          + ExamHistoryInfo.CON_COL_03 + " TEXT,"
+                          + ExamHistoryInfo.CON_COL_04 + " TEXT,"
+                          + ExamHistoryInfo.CON_COL_05 + " TEXT,"
+                          + ExamHistoryInfo.CON_COL_06 + " DEFAULT CURRENT_TIMESTAMP)"
+                );
+
 //            // バージョンＵＰ（２->３）の処理
 //            case (int)2:
 //
 //            // バージョンＵＰ（３->４）の処理
 //            case (int)3:
 //
-//        }
+        }
 
         Log.d(LOG_TAG, "END onUpgrade");
     }
