@@ -43,15 +43,21 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">left</item>
-    </style>
-
-    <style name="WordRowTitleStyle">
-        <item name="android:textSize">16sp</item>
-        <item name="android:gravity">center</item>
+        <item name="android:background">#E3F6CD</item>
     </style>
 
     <style name="WordRowWordStyle">
         <item name="android:textSize">16sp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="WordRowInfoStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="WordRowExamStyle">
+        <item name="android:textSize">14sp</item>
         <item name="android:gravity">left</item>
     </style>
 </resources>

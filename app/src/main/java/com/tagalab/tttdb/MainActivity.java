@@ -397,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // ボタンにクリック時に実行する処理を設定する
                         // 「テスト」ボタンクリック時に実行する処理を設定する
-                        objWorkWord.setExam_text_Listener(new View.OnClickListener() {
+                        objWorkWord.setExam_Listener(new View.OnClickListener() {
                             public void onClick(View view) {
                                 HintCD = "0";
                                 WordRow = objWorkWord;
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                         });
 
                         // 「単語」テキストクリック時に実行する処理を設定する
-                        objWorkWord.setWord_text_Listener(new View.OnClickListener() {
+                        objWorkWord.setInfo_Listener(new View.OnClickListener() {
                             public void onClick(View view) {
                                 WordRow = objWorkWord;
                                 showWordInfoDialog();
@@ -459,7 +459,6 @@ public class MainActivity extends AppCompatActivity {
         // 画面部品を取得
         TextView txtMean = findViewById(R.id.txtExamMean);
         txtMean.setText(WordRow.getWordDictionary().getMean());
-        final TextView txtHint = findViewById(R.id.txtExamHint);
         final TextView txtInput = findViewById(R.id.txtExamInput);
 
         // 読み上げボタンを設定する
@@ -485,11 +484,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // ヒントボタン押下時の処理
-        TextView txtHintTitle = findViewById(R.id.txtExamHintTitle);
-        txtHintTitle.setOnClickListener(new View.OnClickListener() {
+        final Button btnExamHint = findViewById(R.id.btnExamHint);
+        btnExamHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                txtHint.setText(WordRow.getWordDictionary().getHint());
+                btnExamHint.setText(WordRow.getWordDictionary().getHint());
                 HintCD = "1";
             }
         });
