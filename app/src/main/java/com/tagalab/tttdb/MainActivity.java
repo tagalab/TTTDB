@@ -36,7 +36,8 @@ import com.tagalab.tttdb.db.ExamHistoryInfo;
 import com.tagalab.tttdb.db.WordExtendInfo;
 
 public class MainActivity extends AppCompatActivity {
-    // TODO Google Play説明文・画像の修正
+    // TODO 辞書チェック：数値のヒントのteenなどを確認
+    // TODO Google Play画像にコメントを付ける
     private static final String LOG_TAG        = "MainActivity";
     private static final String RESULT_SUCCESS = "〇";
     private static final String RESULT_FAILURE = "×";
