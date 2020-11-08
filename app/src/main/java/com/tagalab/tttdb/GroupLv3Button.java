@@ -44,7 +44,7 @@ class GroupLv3Button {
         mainActivityContext = _context;
 
         // XMLのスタイルを適用したLv1ボタンを作成し画面に追加する
-        Lv3Button = new Button(new ContextThemeWrapper(_context, R.style.MenuButtonStyle));
+        Lv3Button = new Button(new ContextThemeWrapper(_context, R.style.MainMenuButtonStyle));
         _linearLayout.addView(Lv3Button);
 
         // XMLのスタイルを適用していても、Javaではlayout_marginやdrawableは反映されないので直接設定する
@@ -52,6 +52,7 @@ class GroupLv3Button {
         ViewGroup.MarginLayoutParams objMLP = (ViewGroup.MarginLayoutParams) Lv3Button.getLayoutParams();
         objMLP.setMargins(0, 20,  0, 0);
         Lv3Button.setLayoutParams(objMLP);
+        Lv3Button.getLayoutParams().height = (int)(60 * MainActivity.THIS_SCALE);
         Lv3Button.setText(Lv3Info.getLv3_name());
         Lv3Button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -92,10 +93,12 @@ class GroupLv3Button {
     void pushButton() {
         if (LinearLayout.GONE == AreaOpen) {
             // 自エリアを開く
+            Lv3Button.getLayoutParams().height = (int)(50 * MainActivity.THIS_SCALE);
             AreaOpen = LinearLayout.VISIBLE;
 
         } else {
             // 自エリアを閉じる
+            Lv3Button.getLayoutParams().height = (int)(60 * MainActivity.THIS_SCALE);
             AreaOpen = LinearLayout.GONE;
         }
 

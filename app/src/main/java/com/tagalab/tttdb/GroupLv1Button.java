@@ -34,14 +34,15 @@ class GroupLv1Button {
 
     void createButton(Context _context, LinearLayout _linearLayout) {
         // XMLのスタイルを適用したLv1ボタンを作成し画面に追加する
-        Lv1Button = new Button(new ContextThemeWrapper(_context, R.style.MenuButtonStyle));
+        Lv1Button = new Button(new ContextThemeWrapper(_context, R.style.MainMenuButtonStyle));
         _linearLayout.addView(Lv1Button);
 
         // XMLのスタイルを適用していても、Javaではlayout_marginやdrawableは反映されないので直接設定する
         Lv1Button.setBackgroundResource(R.drawable.button_next);
         ViewGroup.MarginLayoutParams objMLP = (ViewGroup.MarginLayoutParams) Lv1Button.getLayoutParams();
-        objMLP.setMargins(0, 50,  0, 0);
+        objMLP.setMargins(0, 40,  0, 0);
         Lv1Button.setLayoutParams(objMLP);
+        Lv1Button.getLayoutParams().height = (int)(60 * MainActivity.THIS_SCALE);
         Lv1Button.setText(Lv1Info.getLv1_name());
 
         // 配下のエリアを作成する
@@ -74,10 +75,12 @@ class GroupLv1Button {
     void pushButton() {
         if (LinearLayout.GONE == AreaOpen) {
             // 自エリアを開く
+            Lv1Button.getLayoutParams().height = (int)(50 * MainActivity.THIS_SCALE);
             AreaOpen = LinearLayout.VISIBLE;
 
         } else {
             // 自エリアを閉じる
+            Lv1Button.getLayoutParams().height = (int)(60 * MainActivity.THIS_SCALE);
             AreaOpen = LinearLayout.GONE;
         }
 

@@ -25,7 +25,7 @@ class GroupLv2Button {
 
     void createGroupLv2Button(Context _context, LinearLayout _linearLayout) {
         // XMLのスタイルを適用したLv2ボタンを作成し画面に追加する
-        Lv2Button = new Button(new ContextThemeWrapper(_context, R.style.MenuButtonStyle));
+        Lv2Button = new Button(new ContextThemeWrapper(_context, R.style.SubMenuButtonStyle));
         _linearLayout.addView(Lv2Button);
 
         // XMLのスタイルを適用していても、Javaではlayout_marginやdrawableは反映されないので直接設定する
@@ -33,6 +33,8 @@ class GroupLv2Button {
         ViewGroup.MarginLayoutParams objMLP = (ViewGroup.MarginLayoutParams) Lv2Button.getLayoutParams();
         objMLP.setMargins(50, 10,  50, 0);
         Lv2Button.setLayoutParams(objMLP);
+        Lv2Button.setMinHeight(0);
+        Lv2Button.setMinimumHeight(0);
         Lv2Button.setText(Lv2Info.getLv2_name());
     }
 

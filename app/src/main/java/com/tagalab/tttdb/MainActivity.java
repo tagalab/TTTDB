@@ -35,9 +35,15 @@ import com.tagalab.tttdb.db.DBOpenHelper;
 import com.tagalab.tttdb.db.ExamHistoryInfo;
 import com.tagalab.tttdb.db.WordExtendInfo;
 
+// TODO 文字列定数をValueに設定する
+// TODO 各ボタンの配色と文字の色を見直す
+// TODO 画面をフレグランスに置き換える
+// TODO ヒント機能を強化する
+// TODO OSのキーボードを使用できるようにする
+// TODO ニュートレジャーの単語を取り込み出題順を調整する
+// TODO ハードモード（ニュートレジャー）、ノーマルモードを選べるようにする
+// TODO ハードモードでは１学期、２学期、３学期のタブが表示されるようにする
 public class MainActivity extends AppCompatActivity {
-    // TODO 辞書チェック：数値のヒントのteenなどを確認
-    // TODO Google Play画像にコメントを付ける
     private static final String LOG_TAG        = "MainActivity";
     private static final String RESULT_SUCCESS = "〇";
     private static final String RESULT_FAILURE = "×";
@@ -176,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
             Cursor objCursor = null;
             try {
-                // 辞書「word_dictionary」に存在するLv1のみボタンを生成する
+                // 辞書「word_dictionary」に存在するLv1のみ生成する
                 String strSQLLv1 = "SELECT DISTINCT group_lv1.lv1_cd, lv1_name "
                         + "FROM group_lv1 "
                         + "INNER JOIN word_dictionary "
@@ -184,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                         + "ORDER BY group_lv1.lv1_cd";
                 objCursor = DB.rawQuery(strSQLLv1, null);
 
-                // Lv1グループの検索結果が存在すればボタンを生成する
+                // Lv1グループの検索結果が存在すればLv1ボタンを生成する
                 while (objCursor.moveToNext()) {
                     // ボタンに対応するグループLv1情報を取得する
                     String[] strLv1 = new String[]{objCursor.getString((int) 0), objCursor.getString((int) 1)};
@@ -192,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                     LstLv1Buttons.add(objWorkLv1);
                 }
 
-                // 各Lv1に存在するLv2ボタンを作成しLv1に追加する
+                // Lv2ボタンを作成しLv1に追加する
                 for (GroupLv1Button objWorkLv1 : LstLv1Buttons) {
                     String strSQLLv2 = "SELECT DISTINCT group_lv2.lv2_order, lv2_name, lv2_name_short "
                             + "FROM group_lv2 "
@@ -211,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                         objWorkLv1.addChild(objWorkLv2);
                     }
                 }
+
             } finally {
                 if (objCursor != null) {
                     objCursor.close();
@@ -219,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for (final GroupLv1Button objWorkLv1 : LstLv1Buttons) {
-            // Lv1ボタンを作成し画面に追加する
+            // Lv1のボタンそのものを作成し画面に追加する
             objWorkLv1.createButton(this, linearLayout);
 
             // ボタンにクリック時に実行する処理を設定する
@@ -230,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
             for(final GroupLv2Button objWorkLv2 : objWorkLv1.getChilds()) {
-                // Lv2ボタンを作成し画面に追加する
+                // Lv2ボタンそのものを作成し画面に追加する
                 objWorkLv2.createGroupLv2Button(this, objWorkLv1.getLv1Area());
 
                 // ボタンにクリック時に実行する処理を設定する
@@ -287,14 +294,72 @@ public class MainActivity extends AppCompatActivity {
                         + "FROM group_lv3 "
                         + "INNER JOIN word_dictionary "
                         +   "ON group_lv3.lv3_cd = word_dictionary.lv3_cd "
+                        + " LEFT OUTER JOIN (SELECT word_id, result, (correct * 100 / count) percent FROM word_expansion) word_exp "
+                        +   "ON word_dictionary.word_id = word_exp.word_id "
                         + "WHERE word_dictionary.lv1_cd = ? ";
 
-                // 検索ワードが「全て」の場合
+                // 検索ボタンが「全て」の場合
                 if (Lv2Button.getInfo().getLv2_name_short().equals("全")) {
                     strSQLLv3 = strSQLLv3 + "ORDER BY group_lv3.lv3_order";
                     objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
 
-                // 検索ワードが「全て」ではない場合
+
+                // 検索ボタンが「テスト未済」の場合
+                }else if(Lv2Button.getInfo().getLv2_name_short().equals("未")) {
+                    strSQLLv3 = strSQLLv3
+                            + "  AND (word_exp.word_id is null OR LENGTH(word_exp.result) = 0) "
+                            + "ORDER BY group_lv3.lv3_order";
+                    objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
+
+                // 検索ボタンが「テスト回数５回未満」の場合
+                }else if(Lv2Button.getInfo().getLv2_name_short().equals("回")) {
+                    strSQLLv3 = strSQLLv3
+                            + "  AND word_exp.word_id is not null "
+                            + "  AND LENGTH(word_exp.result) BETWEEN 1 AND 4 "
+                            + "ORDER BY group_lv3.lv3_order";
+                    objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
+
+                // 検索ボタンが「正解率９０％未満」の場合
+                }else if(Lv2Button.getInfo().getLv2_name_short().equals("九")) {
+                    strSQLLv3 = strSQLLv3
+                            + "  AND word_exp.word_id is not null "
+                            + "  AND word_exp.percent < 90 "
+                            + "ORDER BY group_lv3.lv3_order";
+                    objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
+
+                // 検索ボタンが「正解率７０％未満」の場合
+                }else if(Lv2Button.getInfo().getLv2_name_short().equals("七")) {
+                    strSQLLv3 = strSQLLv3
+                            + "  AND word_exp.word_id is not null "
+                            + "  AND word_exp.percent < 70 "
+                            + "ORDER BY group_lv3.lv3_order";
+                    objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
+
+                // 検索ボタンが「正解率５０％未満」の場合
+                }else if(Lv2Button.getInfo().getLv2_name_short().equals("五")) {
+                    strSQLLv3 = strSQLLv3
+                            + "  AND word_exp.word_id is not null "
+                            + "  AND word_exp.percent < 50 "
+                            + "ORDER BY group_lv3.lv3_order";
+                    objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
+
+                // 検索ボタンが「正解率３０％未満」の場合
+                }else if(Lv2Button.getInfo().getLv2_name_short().equals("三")) {
+                    strSQLLv3 = strSQLLv3
+                            + "  AND word_exp.word_id is not null "
+                            + "  AND word_exp.percent < 30 "
+                            + "ORDER BY group_lv3.lv3_order";
+                    objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
+
+                // 検索ボタンが「最後が不正解」の場合
+                }else if(Lv2Button.getInfo().getLv2_name_short().equals("後")) {
+                    strSQLLv3 = strSQLLv3
+                            + "  AND word_exp.word_id is not null "
+                            + "  AND word_exp.result LIKE '%" + RESULT_FAILURE + "' "
+                            + "ORDER BY group_lv3.lv3_order";
+                    objCursor = DB.rawQuery(strSQLLv3, new String[]{Lv1Button.getInfo().getLv1_cd()});
+
+                // 検索ボタンが上記以外の場合（品詞）
                 } else {
                     strSQLLv3 = strSQLLv3
                             + "  AND word_dictionary.all_type LIKE ? "
@@ -329,20 +394,21 @@ public class MainActivity extends AppCompatActivity {
                             + ",word_dictionary.hint "
                             + ",word_dictionary.phonetic "
                             + ",word_dictionary.example "
-                            + ",word_expansion.word_id "
-                            + ",word_expansion.result "
-                            + ",word_expansion.memo_01 "
-                            + ",word_expansion.memo_02 "
-                            + ",word_expansion.memo_03 "
-                            + ",word_expansion.count "
-                            + ",word_expansion.correct "
+                            + ",word_exp.word_id "
+                            + ",word_exp.result "
+                            + ",word_exp.memo_01 "
+                            + ",word_exp.memo_02 "
+                            + ",word_exp.memo_03 "
+                            + ",word_exp.count "
+                            + ",word_exp.correct "
                             + "FROM word_dictionary "
                             + "INNER JOIN group_lv1 "
                             + "ON word_dictionary.lv1_cd = group_lv1.lv1_cd "
                             + "INNER JOIN group_lv3 "
                             + "ON word_dictionary.lv3_cd = group_lv3.lv3_cd "
-                            + "LEFT OUTER JOIN word_expansion "
-                            + "ON word_dictionary.word_id = word_expansion.word_id "
+                            + "LEFT OUTER JOIN (SELECT word_id, result, memo_01, memo_02, memo_03, count, correct, (correct * 100 / count) percent "
+                            + "  FROM word_expansion) word_exp "
+                            + "ON word_dictionary.word_id = word_exp.word_id "
                             + "WHERE word_dictionary.lv1_cd = ? "
                             + "  AND word_dictionary.lv3_cd = ? ";
 
@@ -353,6 +419,76 @@ public class MainActivity extends AppCompatActivity {
                                 new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
                         );
 
+                    // 検索ボタンが「テスト未済」の場合
+                    }else if(Lv2Button.getInfo().getLv2_name_short().equals("未")) {
+                        strSQLWord = strSQLWord
+                                + "  AND (word_exp.word_id is null OR LENGTH(word_exp.result) = 0) "
+                                + "ORDER BY word_dictionary.word_order";
+                        objCursor = DB.rawQuery(strSQLWord,
+                                new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
+                        );
+
+                    // 検索ボタンが「テスト回数５回未満」の場合
+                    }else if(Lv2Button.getInfo().getLv2_name_short().equals("回")) {
+                        strSQLWord = strSQLWord
+                                + "  AND word_exp.word_id is not null "
+                                + "  AND LENGTH(word_exp.result) BETWEEN 1 AND 4 "
+                                + "ORDER BY word_dictionary.word_order";
+                        objCursor = DB.rawQuery(strSQLWord,
+                                new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
+                        );
+
+                    // 検索ボタンが「正解率９０％未満」の場合
+                    }else if(Lv2Button.getInfo().getLv2_name_short().equals("九")) {
+                        strSQLWord = strSQLWord
+                                + "  AND word_exp.word_id is not null "
+                                + "  AND word_exp.percent < 90 "
+                                + "ORDER BY word_dictionary.word_order";
+                        objCursor = DB.rawQuery(strSQLWord,
+                                new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
+                        );
+
+                    // 検索ボタンが「正解率７０％未満」の場合
+                    }else if(Lv2Button.getInfo().getLv2_name_short().equals("七")) {
+                        strSQLWord = strSQLWord
+                                + "  AND word_exp.word_id is not null "
+                                + "  AND word_exp.percent < 70 "
+                                + "ORDER BY word_dictionary.word_order";
+                        objCursor = DB.rawQuery(strSQLWord,
+                                new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
+                        );
+
+                    // 検索ボタンが「正解率５０％未満」の場合
+                    }else if(Lv2Button.getInfo().getLv2_name_short().equals("五")) {
+                        strSQLWord = strSQLWord
+                                + "  AND word_exp.word_id is not null "
+                                + "  AND word_exp.percent < 50 "
+                                + "ORDER BY word_dictionary.word_order";
+                        objCursor = DB.rawQuery(strSQLWord,
+                                new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
+                        );
+
+                    // 検索ボタンが「正解率３０％未満」の場合
+                    }else if(Lv2Button.getInfo().getLv2_name_short().equals("三")) {
+                        strSQLWord = strSQLWord
+                                + "  AND word_exp.word_id is not null "
+                                + "  AND word_exp.percent < 30 "
+                                + "ORDER BY word_dictionary.word_order";
+                        objCursor = DB.rawQuery(strSQLWord,
+                                new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
+                        );
+
+                    // 検索ボタンが「最後が不正解」の場合
+                    }else if(Lv2Button.getInfo().getLv2_name_short().equals("後")) {
+                        strSQLWord = strSQLWord
+                                + "  AND word_exp.word_id is not null "
+                                + "  AND word_exp.result LIKE '%" + RESULT_FAILURE + "' "
+                                + "ORDER BY word_dictionary.word_order";
+                        objCursor = DB.rawQuery(strSQLWord,
+                                new String[]{Lv1Button.getInfo().getLv1_cd(), objWorkLv3.getInfo().getLv3_cd()} // SQL文のパラメータ「?」に置き換わる値の配列
+                        );
+
+                    // 検索ボタンが上記以外の場合（品詞）
                     } else {
                         strSQLWord = strSQLWord
                                 + "  AND word_dictionary.all_type LIKE ? "

@@ -16,7 +16,7 @@ import com.tagalab.tttdb.TTTDB_Util;
 public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String LOG_TAG = "DBOpenHelper";
     private static final String DB_NAME = "TTTDB.sqlite";
-    private static final int    DB_VER  = 2;
+    private static final int    DB_VER  = 3;
 
     private static final String ENTER_BEFORE = "<br>";
     private static final String ENTER_AFTER  = "\n";
@@ -220,11 +220,31 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                           + ExamHistoryInfo.CON_COL_06 + " DEFAULT CURRENT_TIMESTAMP)"
                 );
 
-//            // バージョンＵＰ（２->３）の処理
-//            case (int)2:
-//
+            // バージョンＵＰ（２->３）の処理
+            case (int)2:
+                // Lv2テーブルを空にする。
+                db.execSQL("DELETE FROM " + GroupLv2Info.CON_TBL_NAME);
+
+                // Lv2データを再登録する。
+                List<String[]> lstCsvLv2  = TTTDB_Util.readCsvFile(OBJ_RESOURCES, "group_lv2.csv");
+                for (String[] strDatas : lstCsvLv2) {
+                    // カラム名と値のセットを生成しテーブルに挿入する。
+                    ContentValues objValues = new ContentValues();
+                    objValues.put(GroupLv2Info.CON_COL_01, strDatas[0]); // Lv2順序
+                    objValues.put(GroupLv2Info.CON_COL_02, strDatas[1]); // Lv2名称
+                    objValues.put(GroupLv2Info.CON_COL_03, strDatas[2]); // Lv2略称
+
+                    Long lngID = db.insert(GroupLv2Info.CON_TBL_NAME, null, objValues);
+                }
+
 //            // バージョンＵＰ（３->４）の処理
 //            case (int)3:
+//
+//            // バージョンＵＰ（4->5）の処理
+//            case (int)4:
+//
+//            // バージョンＵＰ（5->6）の処理
+//            case (int)5:
 //
         }
 

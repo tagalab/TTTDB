@@ -8,13 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="MenuButtonStyle" parent="android:style/Widget.Button">
+    <style name="MainMenuButtonStyle" parent="android:style/Widget.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">50dp</item>
         <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@android:color/holo_green_dark</item>
+        <item name="android:textColor">#448000</item>
+    </style>
+
+    <style name="SubMenuButtonStyle" parent="android:style/Widget.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#448000</item>
     </style>
 
     <style name="Lv1AreaStyle">
@@ -35,7 +43,7 @@
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">#FF5722</item>
+        <item name="android:textColor">#F83D02</item>
     </style>
 
     <style name="WordRowLayoutStyle">
